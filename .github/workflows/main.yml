@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Use Java 17
-          distribution: 'adoptopenjdk'
+          distribution: 'openjdk'
 
       - name: Cache SonarQube scanner dependencies
         uses: actions/cache@v2
