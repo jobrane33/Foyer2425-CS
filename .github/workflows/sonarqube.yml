@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'  # Use Java 17
-          distribution: 'zulu'  # You can also use 'zulu' or others if needed
+          distribution: 'zulu'  # Use Zulu OpenJDK 17 (or another distribution if preferred)
 
       # Step 2: Checkout the repository code
       - name: Checkout repository
@@ -35,8 +35,9 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # SonarQube instance URL
         with:
           args:
-            # Unique key for your project in SonarQube
             -Dsonar.projectKey=Devops-spring-project
+            # Set the correct Java 17 path for SonarScanner
+            -Dsonar.java.jdkHome=${{ runner.tool_cache }}/zulu-17/
             # Optional: Specify main source directory, if needed
             #-Dsonar.sources=src/main/java
             # Optional: Specify test source directory, if needed
