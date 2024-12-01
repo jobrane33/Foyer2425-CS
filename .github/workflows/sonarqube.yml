@@ -16,10 +16,10 @@ jobs:
 
     steps:
       # Step 1: Set up Java 17 (required by SonarQube if it's compiled with Java 17)
-      - name: Set up JDK 11
+      - name: Set up JDK 
         uses: actions/setup-java@v3
         with:
-          java-version: '17'  # Use Java 17
+          java-version: '11'  # Use Java 17
           distribution: 'zulu'  # You can also use 'zulu' or others if needed
 
       # Step 2: Checkout the repository code
