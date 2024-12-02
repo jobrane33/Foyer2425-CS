@@ -15,33 +15,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Set up Java 17 (required by SonarQube if it's compiled with Java 17)
-      - name: Set up JDK 
+      # Step 1: Set up Java 17
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17'  # Use Java 17
-          distribution: 'zulu'  # Use Zulu OpenJDK 17 (or another distribution if preferred)
+          java-version: '17'
+          distribution: 'zulu'
 
       # Step 2: Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 3: Run SonarQube analysis
+      # Step 3: Set JAVA_HOME environment variable
+      - name: Configure JAVA_HOME for SonarScanner
+        run: echo "JAVA_HOME=${{ steps.setup-java.outputs.java-home }}" >> $GITHUB_ENV
+
+      # Step 4: Run SonarQube analysis
       - name: Analyze with SonarQube
         uses: SonarSource/sonarqube-scan-action@v1.1.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for PR info
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # SonarQube token, created and added in GitHub Secrets
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # SonarQube instance URL
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
         with:
           args:
             -Dsonar.projectKey=Devops-spring-project
-            # Set the correct Java 17 path for SonarScanner
-            # Optional: Specify main source directory, if needed
-            #-Dsonar.sources=src/main/java
-            # Optional: Specify test source directory, if needed
-            #-Dsonar.tests=src/test/java
-            # Optional: Specify base directory if your project isn't in the root
-            #-Dsonar.projectBaseDir=./subdir
-            # Optional: Enable debug mode for more verbose logs
-            #-Dsonar.verbose=true
