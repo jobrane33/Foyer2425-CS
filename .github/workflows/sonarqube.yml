@@ -44,7 +44,6 @@ jobs:
             -Dsonar.projectName=Devops-spring-project
             -Dsonar.projectVersion=1.0
             -Dsonar.language=java
-            -Dsonar.tests=src/test/java
             -Dsonar.sources=src/main/java
             -Dsonar-scanner -X
             -Dsonar.java.binaries=target/classes
