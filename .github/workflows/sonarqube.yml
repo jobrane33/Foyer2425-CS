@@ -41,8 +41,5 @@ jobs:
         with:
           args:
             -Dsonar.projectKey=Devops-spring-project
-            sonar.projectVersion=1.0
-            sonar.sources=src/main/java
-            sonar.sourceEncoding=UTF-8
-            sonar.language=java
-            sonar.java.binaries=target/classes
+            -Dsonar.sources=src/main/java/
+            -Dsonar.java.binaries=target/classes
