@@ -37,9 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set JAVA_HOME
-          PATH: ${{ steps.setup-java.outputs.java-home }}/bin:${{ env.PATH }}  # Ensure Java 17 is in the PATH
+          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
         with:
           args:
             -Dsonar.projectKey=Devops-spring-project
-
