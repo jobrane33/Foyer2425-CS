@@ -32,13 +32,12 @@ jobs:
 
       # Step 4: Run SonarQube analysis
       - name: Analyze with SonarQube
-        uses: SonarSource/sonarqube-scan-action@v1.1.0
+        uses: SonarSource/sonarqube-scan-action@v2.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
         with:
-          args: |
+          args:
             -Dsonar.projectKey=Devops-spring-project
-            -Dsonar.scanner.jdkHome=/opt/hostedtoolcache/Java_Zulu_jdk/17.0.13-11/x64
-
