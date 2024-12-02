@@ -37,7 +37,6 @@ jobs:
           args:
             -Dsonar.projectKey=Devops-spring-project
             # Set the correct Java 17 path for SonarScanner
-            -Dsonar.java.jdkHome=${{ runner.tool_cache }}/zulu-17/
             # Optional: Specify main source directory, if needed
             #-Dsonar.sources=src/main/java
             # Optional: Specify test source directory, if needed
