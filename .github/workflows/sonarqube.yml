@@ -40,6 +40,7 @@ jobs:
           JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
         with:
           args:
-            -Dsonar.projectKey=Foyer2425-CS
+            mvn sonar:sonar \
+                        -Dsonar.projectKey=Foyer2425-CS \
             
 
