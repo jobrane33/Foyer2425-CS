@@ -40,12 +40,6 @@ jobs:
           JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
         with:
           args:
-            -Dsonar.projectKey=Devops-spring-project
-            -Dsonar.projectName=Devops-spring-project
-            -Dsonar.projectVersion=1.0
-            -Dsonar.language=java
-            -Dsonar.sources=src/main/java
-            -Dsonar-scanner -X
-            -Dsonar.java.binaries=target/classes
-            -Dsonar.exclusions=**/*.java
+            -Dsonar.projectKey=Foyer2425-CS
+            
 
