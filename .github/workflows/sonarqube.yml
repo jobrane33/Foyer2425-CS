@@ -2,13 +2,13 @@ name: SonarQube analysis
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Trigger for push to main
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Trigger for PRs targeting main
   workflow_dispatch:
 
 permissions:
-  pull-requests: read  # Allows SonarQube to decorate PRs with analysis results
+  pull-requests: write  # Needed to comment on PRs
 
 jobs:
   Analysis:
@@ -28,12 +28,42 @@ jobs:
 
       # Step 3: Run Maven build with SonarQube analysis
       - name: Run Maven build and SonarQube analysis
+        id: sonar
         run: |
           mvn clean verify sonar:sonar \
             -Dsonar.projectKey=Foyer2425-CS \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN2 }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN2 }} \
+            -Dsonar.qualitygate.wait=true
 
-      # Optional: Publish SonarQube PR Decoration
-      - name: Publish SonarQube PR Decoration
-        run: echo "PR decoration handled automatically by SonarQube if configured on the server."
+      # Step 4: Always post a comment with SonarQube report link
+      - name: Comment on PR with SonarQube report
+        run: |
+          echo "SonarQube Quality Gate status checked. Fetching report URL..."
+          REPORT_URL="${{ secrets.SONAR_HOST_URL }}/dashboard?id=Foyer2425-CS"
+          PR_COMMENT="### SonarQube Report\nPlease review the [SonarQube report](${REPORT_URL}) for details."
+          
+          # Check if the event is a PR or push to main
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            # For PR event, comment on the PR directly
+            curl -s -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"body\":\"${PR_COMMENT}\"}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            # For push event, find the PR associated with the commit and post a comment
+            PR_NUMBER=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.actor }}:$(git rev-parse --abbrev-ref HEAD)" \
+              | jq '.[0].number' | tr -d '"')
+
+            if [ -n "$PR_NUMBER" ]; then
+              # If a PR is found, post a comment
+              curl -s -X POST \
+                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"body\":\"${PR_COMMENT}\"}" \
+                "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
+            fi
+          fi
