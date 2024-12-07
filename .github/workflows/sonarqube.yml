@@ -28,12 +28,12 @@ jobs:
 
       # Step 3: Run Maven build with SonarQube analysis
       - name: Run Maven build and SonarQube analysis
-        run: mvn clean verify sonar:sonar \
-              -Dsonar.projectKey=Foyer2425-CS \
-              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-              -Dsonar.login=${{ secrets.SONAR_TOKEN2 }}
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=Foyer2425-CS \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN2 }}
 
-      # Optional: Publish SonarQube report in PR (if enabled on SonarQube server)
-      - name: SonarQube PR Decoration
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Optional: Publish SonarQube PR Decoration
+      - name: Publish SonarQube PR Decoration
+        run: echo "PR decoration handled automatically by SonarQube if configured on the server."
