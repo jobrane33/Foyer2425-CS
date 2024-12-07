@@ -1,0 +1,48 @@
+name: SonarQube analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read  # Allows SonarQube to decorate PRs with analysis results
+
+jobs:
+  Analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Set up Java 17
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      # Step 2: Checkout the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 3: Set JAVA_HOME environment variable
+      - name: Configure JAVA_HOME for SonarScanner
+        run: echo "JAVA_HOME=${{ steps.setup-java.outputs.java-home }}" >> $GITHUB_ENV
+
+      # Step 4: Run SonarQube analysis
+      - name: Analyze with SonarQube
+        uses: SonarSource/sonarqube-scan-action@v2.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN2 }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
+        with:
+          args:
+            mvn sonar:sonar \
+                        -Dsonar.projectKey=Foyer2425-CS \
+                        -Dsonar.host.url=https://59a2-41-226-25-4.ngrok-free.app \
+                        -Dsonar.login=sqa_48b23e9f91795393a76cfaefa6f74e41de63bd9c
+            
+
