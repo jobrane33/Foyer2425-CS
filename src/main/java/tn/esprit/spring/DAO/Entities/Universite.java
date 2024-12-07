@@ -22,5 +22,5 @@ public class Universite implements Serializable {
     String adresse;
     @OneToOne(cascade = CascadeType.ALL) //ajout, Modif et suppression
     Foyer foyer;
-
+    long FCapaciteFoyer;
 }
