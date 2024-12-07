@@ -11,6 +11,7 @@ import java.util.List;
 @RequestMapping("bloc")
 @AllArgsConstructor
 public class BlocRestController {
+    //test comment for PR
     IBlocService service;
 
     @PostMapping("addOrUpdate")
