@@ -26,23 +26,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 3: Set JAVA_HOME environment variable
-      - name: Configure JAVA_HOME for SonarScanner
-        run: echo "JAVA_HOME=${{ steps.setup-java.outputs.java-home }}" >> $GITHUB_ENV
+      # Step 3: Run Maven build with SonarQube analysis
+      - name: Run Maven build and SonarQube analysis
+        run: mvn clean verify sonar:sonar \
+              -Dsonar.projectKey=Foyer2425-CS \
+              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+              -Dsonar.login=${{ secrets.SONAR_TOKEN2 }}
 
-      # Step 4: Run SonarQube analysis
-      - name: Analyze with SonarQube
-        uses: SonarSource/sonarqube-scan-action@v2.1.0
+      # Optional: Publish SonarQube report in PR (if enabled on SonarQube server)
+      - name: SonarQube PR Decoration
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN2 }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
-        with:
-          args:
-            mvn sonar:sonar \
-                        -Dsonar.projectKey=Foyer2425-CS \
-                        -Dsonar.host.url=https://59a2-41-226-25-4.ngrok-free.app \
-                        -Dsonar.login=sqa_48b23e9f91795393a76cfaefa6f74e41de63bd9c
-            
-
