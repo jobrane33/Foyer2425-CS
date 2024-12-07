@@ -36,14 +36,14 @@ jobs:
             -Dsonar.login=${{ secrets.SONAR_TOKEN2 }} \
             -Dsonar.qualitygate.wait=true
 
-      # Step 4: Add a PR comment if Quality Gate fails
+      # Step 4: Always post a comment with SonarQube report link
       - name: Comment on PR with SonarQube report
-        if: failure()  # Only run if the previous step failed
         run: |
-          echo "SonarQube Quality Gate failed. Fetching report URL..."
+          echo "SonarQube Quality Gate status checked. Fetching report URL..."
           REPORT_URL="${{ secrets.SONAR_HOST_URL }}/dashboard?id=Foyer2425-CS"
-          PR_COMMENT="### :x: SonarQube Quality Gate Failed\nPlease review the [SonarQube report](${REPORT_URL}) for details."
-
+          PR_COMMENT="### SonarQube Report\nPlease review the [SonarQube report](${REPORT_URL}) for details."
+          
+          # Check if the event is a PR or push to main
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             # For PR event, comment on the PR directly
             curl -s -X POST \
