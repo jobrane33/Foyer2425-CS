@@ -1,0 +1,39 @@
+name: SonarQube analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read  # Allows SonarQube to decorate PRs with analysis results
+
+jobs:
+  Analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Set up Java 17
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      # Step 2: Checkout the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 3: Run Maven build with SonarQube analysis
+      - name: Run Maven build and SonarQube analysis
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=Foyer2425-CS \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN2 }}
+
+      # Optional: Publish SonarQube PR Decoration
+      - name: Publish SonarQube PR Decoration
+        run: echo "PR decoration handled automatically by SonarQube if configured on the server."
