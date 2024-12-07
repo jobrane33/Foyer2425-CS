@@ -40,6 +40,9 @@ jobs:
           JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}  # Explicitly set Java 17
         with:
           args:
-            -Dsonar.projectKey=Foyer2425-CS
+            mvn sonar:sonar \
+                        -Dsonar.projectKey=Foyer2425-CS \
+                        -Dsonar.host.url=https://59a2-41-226-25-4.ngrok-free.app \
+                        -Dsonar.login=sqa_48b23e9f91795393a76cfaefa6f74e41de63bd9c
             
 
