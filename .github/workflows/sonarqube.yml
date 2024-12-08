@@ -26,7 +26,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 3: Run Maven build with SonarQube analysis
+      # Step 3: Run Maven build and SonarQube analysis without blocking on quality gate
       - name: Run Maven build and SonarQube analysis
         id: sonar
         run: |
@@ -34,16 +34,41 @@ jobs:
             -Dsonar.projectKey=Foyer2425-CS \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN2 }} \
-            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.wait=false
 
-      # Step 4: Always post a comment with SonarQube report link
-      - name: Comment on PR with SonarQube report
+      # Step 4: Check quality gate status using SonarQube API
+      - name: Check SonarQube Quality Gate status
+        id: qualitygate
         run: |
-          echo "SonarQube Quality Gate status checked. Fetching report URL..."
+          SONAR_PROJECT_KEY="Foyer2425-CS"
+          SONAR_API_URL="${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}"
+
+          # Fetch the quality gate status
+          QUALITY_GATE_STATUS=$(curl -s -u "${{ secrets.SONAR_TOKEN2 }}:" "${SONAR_API_URL}" | jq -r '.projectStatus.status')
+
+          echo "Quality Gate Status: $QUALITY_GATE_STATUS"
+          echo "::set-output name=status::$QUALITY_GATE_STATUS"
+
+      # Step 5: Fail the workflow if the quality gate failed
+      - name: Fail on Quality Gate Failure
+        if: steps.qualitygate.outputs.status == 'ERROR'
+        run: |
+          echo "Quality Gate failed. Stopping the workflow."
+          exit 1
+
+      # Step 6: Comment on PR with the SonarQube report
+      - name: Comment on PR with SonarQube report
+        if: always()  # Run regardless of previous steps' outcomes
+        run: |
           REPORT_URL="${{ secrets.SONAR_HOST_URL }}/dashboard?id=Foyer2425-CS"
-          PR_COMMENT="### SonarQube Report\nPlease review the [SonarQube report](${REPORT_URL}) for details."
+          QUALITY_GATE_STATUS=$(echo "${{ steps.qualitygate.outputs.status }}" | tr '[:upper:]' '[:lower:]')
           
-          # Check if the event is a PR or push to main
+          if [[ "$QUALITY_GATE_STATUS" == "error" ]]; then
+            PR_COMMENT="### :x: SonarQube Quality Gate Failed\nPlease review the [SonarQube report](${REPORT_URL}) for details."
+          else
+            PR_COMMENT="### :white_check_mark: SonarQube Quality Gate Passed\nYou can review the [SonarQube report](${REPORT_URL})."
+          fi
+
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             # For PR event, comment on the PR directly
             curl -s -X POST \
@@ -51,19 +76,4 @@ jobs:
               -H "Content-Type: application/json" \
               -d "{\"body\":\"${PR_COMMENT}\"}" \
               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
-          elif [[ "${{ github.event_name }}" == "push" ]]; then
-            # For push event, find the PR associated with the commit and post a comment
-            PR_NUMBER=$(curl -s \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.actor }}:$(git rev-parse --abbrev-ref HEAD)" \
-              | jq '.[0].number' | tr -d '"')
-
-            if [ -n "$PR_NUMBER" ]; then
-              # If a PR is found, post a comment
-              curl -s -X POST \
-                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Content-Type: application/json" \
-                -d "{\"body\":\"${PR_COMMENT}\"}" \
-                "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
-            fi
           fi
