@@ -34,6 +34,7 @@ jobs:
             -Dsonar.projectKey=Foyer2425-CS \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN2 }} \
+            -Dsonar.qualitygate.fail=true \
             -Dsonar.qualitygate.wait=true
 
       # Step 4: Add a PR comment if Quality Gate fails
