@@ -22,7 +22,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "7070:8080"
+      - "7070:8086"
     depends_on:
       - mysql
     networks:
