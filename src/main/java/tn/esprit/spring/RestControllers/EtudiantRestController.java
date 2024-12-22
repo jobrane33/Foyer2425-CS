@@ -8,6 +8,7 @@ import tn.esprit.spring.Services.Etudiant.IEtudiantService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RequestMapping("etudiant")
 @AllArgsConstructor
 public class EtudiantRestController {
@@ -33,8 +34,8 @@ public class EtudiantRestController {
         service.delete(e);
     }
 
-    @DeleteMapping("deleteById")
-    void deleteById(@RequestParam long id) {
+    @DeleteMapping("/deleteById/{id}")
+    void deleteById(@PathVariable long id) {
         service.deleteById(id);
     }
 
