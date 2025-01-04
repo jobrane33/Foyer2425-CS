@@ -26,24 +26,33 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 3: Run Maven build with SonarQube analysis
+      # Step 3: Run Unit Tests
+      - name: Run Unit Tests
+        run: mvn test
+
+      # Step 4: Run Maven build with SonarQube analysis
       - name: Run Maven build and SonarQube analysis
         id: sonar
         run: |
+          # Get the current datetime in minutes format
+          CURRENT_DATETIME=$(date +"%Y%m%d%H%M")
+          PROJECT_KEY="Foyer2425-CS-${CURRENT_DATETIME}"
+
           mvn clean verify sonar:sonar \
-            -Dsonar.projectKey=Foyer2425-CS \
+            -Dsonar.projectKey=${PROJECT_KEY} \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN2 }} \
+            -Dsonar.qualitygate.fail=true \
             -Dsonar.qualitygate.wait=true
 
-      # Step 4: Always post a comment with SonarQube report link
+      # Step 5: Add a PR comment if Quality Gate fails
       - name: Comment on PR with SonarQube report
+        if: failure()  # Only run if the previous step failed
         run: |
-          echo "SonarQube Quality Gate status checked. Fetching report URL..."
+          echo "SonarQube Quality Gate failed. Fetching report URL..."
           REPORT_URL="${{ secrets.SONAR_HOST_URL }}/dashboard?id=Foyer2425-CS"
-          PR_COMMENT="### SonarQube Report\nPlease review the [SonarQube report](${REPORT_URL}) for details."
-          
-          # Check if the event is a PR or push to main
+          PR_COMMENT="### :x: SonarQube Quality Gate Failed\nPlease review the [SonarQube report](${REPORT_URL}) for details."
+
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             # For PR event, comment on the PR directly
             curl -s -X POST \

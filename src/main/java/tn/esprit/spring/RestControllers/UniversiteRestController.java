@@ -10,6 +10,7 @@ import tn.esprit.spring.Services.Universite.IUniversiteService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RequestMapping("universite")
 @AllArgsConstructor
 public class UniversiteRestController {

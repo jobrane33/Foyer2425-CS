@@ -1,0 +1,5 @@
+# Created at 2025-01-03T23:17:46.162
+Boot Manifest-JAR contains absolute paths in classpath 'D:\ubunto-default\BackendDevops\BackendDevops\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

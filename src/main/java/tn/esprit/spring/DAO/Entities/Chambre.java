@@ -31,4 +31,6 @@ public class Chambre implements Serializable {
     @OneToMany
     List<Reservation> reservations= new ArrayList<>();
 
+    public Chambre(long l, String chambre1, int i, Object o) {
+    }
 }

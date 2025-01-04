@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SonarQubeTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Foyer</a> &gt; <a href="index.source.html" class="el_package">tn.esprit.spring.Services</a> &gt; <span class="el_source">SonarQubeTest.java</span></div><h1>SonarQubeTest.java</h1><pre class="source lang-java linenums">package tn.esprit.spring.Services;
+
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L7">public class SonarQubeTest {</span>
+
+    // Code Smell: Complex Method (Too many lines in a single method)
+    public void complexMethod() {
+<span class="nc" id="L11">        String result = &quot;&quot;;</span>
+<span class="nc bnc" id="L12" title="All 2 branches missed.">        for (int i = 0; i &lt; 100; i++) {</span>
+<span class="nc bnc" id="L13" title="All 2 branches missed.">            for (int j = 0; j &lt; 50; j++) {</span>
+<span class="nc" id="L14">                result += i + &quot;:&quot; + j + &quot; &quot;;</span>
+            }
+        }
+<span class="nc" id="L17">        System.out.println(result);</span>
+<span class="nc" id="L18">    }</span>
+    public void secureHashing() {
+        try {
+<span class="nc" id="L21">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;); // Secure hashing algorithm</span>
+<span class="nc" id="L22">            md.update(&quot;test&quot;.getBytes());</span>
+<span class="nc" id="L23">            byte[] hash = md.digest();</span>
+<span class="nc" id="L24">            System.out.println(new String(hash));</span>
+<span class="nc" id="L25">        } catch (Exception e) {</span>
+<span class="nc" id="L26">            e.printStackTrace();</span>
+<span class="nc" id="L27">        }</span>
+<span class="nc" id="L28">    }</span>
+    // XSS vulnerability (no sanitization of user input)
+    public void xssRisk(String userInput) {
+<span class="nc" id="L31">        String htmlContent = &quot;&lt;div&gt;&quot; + userInput + &quot;&lt;/div&gt;&quot;;  // Dangerous if userInput contains script</span>
+<span class="nc" id="L32">        System.out.println(htmlContent);</span>
+<span class="nc" id="L33">    }</span>
+    // Weak randomness (using Math.random())
+    public void weakRandomness() {
+<span class="nc" id="L36">        double randomValue = Math.random();  // Should use SecureRandom instead</span>
+<span class="nc" id="L37">        System.out.println(&quot;Random Value: &quot; + randomValue);</span>
+<span class="nc" id="L38">    }</span>
+    // Insecure network communication (HTTP instead of HTTPS)
+    public void insecureNetworkCommunication() {
+<span class="nc" id="L41">        String url = &quot;http://example.com&quot;;  // HTTP is insecure, SonarQube should flag this</span>
+<span class="nc" id="L42">        System.out.println(&quot;Sending data to: &quot; + url);</span>
+<span class="nc" id="L43">    }</span>
+    // Sensitive data logging
+    public void sensitiveDataLogging(String password) {
+<span class="nc" id="L46">        System.out.println(&quot;Password: &quot; + password);  // Logging sensitive data</span>
+<span class="nc" id="L47">    }</span>
+    // Empty catch block (ignoring exceptions)
+    private void emptyCatchBlock1() {
+        try {
+<span class="nc" id="L51">            int result = 10 / 0;  // Will throw ArithmeticException</span>
+<span class="nc" id="L52">        } catch (ArithmeticException e) {</span>
+            // Exception is silently ignored without logging, making debugging difficult
+<span class="nc" id="L54">        }</span>
+<span class="nc" id="L55">    }// SQL Injection Vulnerability</span>
+    public void sqlInjectionRisk(String userInput) {
+<span class="nc" id="L57">        String query = &quot;SELECT * FROM users WHERE username = '&quot; + userInput + &quot;'&quot;; // No sanitization</span>
+        // This will make the query vulnerable to SQL injection attacks
+<span class="nc" id="L59">        System.out.println(query);</span>
+<span class="nc" id="L60">    }</span>
+    // Insecure Hashing using SHA-1 (SonarQube should detect this)
+    public void insecureHashingNO() {
+        try {
+<span class="nc" id="L64">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-1&quot;); // Insecure hash function</span>
+<span class="nc" id="L65">            md.update(&quot;test&quot;.getBytes());</span>
+<span class="nc" id="L66">            byte[] hash = md.digest();</span>
+<span class="nc" id="L67">            System.out.println(new String(hash));  // Vulnerable to attacks</span>
+<span class="nc" id="L68">        } catch (Exception e) {</span>
+<span class="nc" id="L69">            e.printStackTrace();</span>
+<span class="nc" id="L70">        }</span>
+<span class="nc" id="L71">    }</span>
+
+
+    public void secureHashinginsecure() {
+        try {
+<span class="nc" id="L76">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-1&quot;); // Secure hashing algorithm</span>
+<span class="nc" id="L77">            md.update(&quot;test&quot;.getBytes());</span>
+<span class="nc" id="L78">            byte[] hash = md.digest();</span>
+<span class="nc" id="L79">            System.out.println(new String(hash));</span>
+<span class="nc" id="L80">        } catch (Exception e) {</span>
+<span class="nc" id="L81">            e.printStackTrace();</span>
+<span class="nc" id="L82">        }</span>
+<span class="nc" id="L83">    }</span>
+
+
+    // Bug: Null Pointer Dereference
+    public void nullPointerBug() {
+<span class="nc" id="L88">        String str = null;</span>
+<span class="nc" id="L89">        System.out.println(str.length());  // Will throw NullPointerException</span>
+<span class="nc" id="L90">    }</span>
+
+    // Vulnerability: Using SHA1 which is deprecated and insecure
+    public void insecureHashing() {
+        try {
+<span class="nc" id="L95">            MessageDigest md = MessageDigest.getInstance(&quot;SHA1&quot;); // Vulnerable to attacks</span>
+<span class="nc" id="L96">            md.update(&quot;test&quot;.getBytes());</span>
+<span class="nc" id="L97">            byte[] hash = md.digest();</span>
+<span class="nc" id="L98">            System.out.println(new String(hash));</span>
+<span class="nc" id="L99">        } catch (Exception e) {</span>
+<span class="nc" id="L100">            e.printStackTrace();</span>
+<span class="nc" id="L101">        }</span>
+<span class="nc" id="L102">    }</span>
+
+    // Code Smell: Duplicated Code (The same logic appears twice)
+    public void duplicatedCode1() {
+<span class="nc" id="L106">        int a = 0;</span>
+<span class="nc" id="L107">        int b = 0;</span>
+<span class="nc" id="L108">        int c = 0;</span>
+
+        // Code Block 1
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L112">            a += i;</span>
+<span class="nc" id="L113">            b += i;</span>
+<span class="nc" id="L114">            c += i;</span>
+        }
+
+        // Code Block 2 (Duplicated)
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L119">            a += i;</span>
+<span class="nc" id="L120">            b += i;</span>
+<span class="nc" id="L121">            c += i;</span>
+        }
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L124">            a += i;</span>
+<span class="nc" id="L125">            b += i;</span>
+<span class="nc" id="L126">            c += i;</span>
+        }
+<span class="nc" id="L128">    }</span>
+
+    // Code Smell: Duplicated Code (The same logic appears twice)
+    public void duplicatedCode5() {
+<span class="nc" id="L132">        int a = 0;</span>
+<span class="nc" id="L133">        int b = 0;</span>
+<span class="nc" id="L134">        int c = 0;</span>
+
+        // Code Block 1
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L138">            a += i;</span>
+<span class="nc" id="L139">            b += i;</span>
+<span class="nc" id="L140">            c += i;</span>
+        }
+
+        // Code Block 2 (Duplicated)
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L145">            a += i;</span>
+<span class="nc" id="L146">            b += i;</span>
+<span class="nc" id="L147">            c += i;</span>
+        }
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L150">            a += i;</span>
+<span class="nc" id="L151">            b += i;</span>
+<span class="nc" id="L152">            c += i;</span>
+        }
+<span class="nc" id="L154">    }</span>
+
+    // Code Smell: Duplicated Code (The same logic appears twice)
+    public void duplicatedCode() {
+<span class="nc" id="L158">        int a = 0;</span>
+<span class="nc" id="L159">        int b = 0;</span>
+<span class="nc" id="L160">        int c = 0;</span>
+
+        // Code Block 1
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L164">            a += i;</span>
+<span class="nc" id="L165">            b += i;</span>
+<span class="nc" id="L166">            c += i;</span>
+        }
+
+        // Code Block 2 (Duplicated)
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L171">            a += i;</span>
+<span class="nc" id="L172">            b += i;</span>
+<span class="nc" id="L173">            c += i;</span>
+        }
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        for (int i = 0; i &lt; 10; i++) {</span>
+<span class="nc" id="L176">            a += i;</span>
+<span class="nc" id="L177">            b += i;</span>
+<span class="nc" id="L178">            c += i;</span>
+        }
+<span class="nc" id="L180">    }</span>
+
+
+    // Code Smell: Long Class (Class is too long and should be split into smaller classes)
+    public void longClassMethod() {
+<span class="nc" id="L185">        int total = 0;</span>
+<span class="nc" id="L186">        List&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        for (int i = 0; i &lt; 100; i++) {</span>
+<span class="nc" id="L188">            numbers.add(i);</span>
+        }
+
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        for (int i = 0; i &lt; 100; i++) {</span>
+<span class="nc" id="L192">            total += numbers.get(i);</span>
+        }
+<span class="nc" id="L194">        System.out.println(total);</span>
+<span class="nc" id="L195">    }</span>
+
+    // Bug: Array Index Out of Bounds Exception
+    public void arrayIndexOutOfBounds() {
+<span class="nc" id="L199">        int[] arr = new int[5];</span>
+<span class="nc" id="L200">        System.out.println(arr[10]);  // Will throw ArrayIndexOutOfBoundsException</span>
+<span class="nc" id="L201">    }</span>
+
+    // Unused Variable (Code Smell)
+    public void unusedVariable() {
+<span class="nc" id="L205">        int unused = 100;  // Variable is never used</span>
+<span class="nc" id="L206">    }</span>
+
+    // Deprecated API Usage (Code Smell)
+    public void deprecatedApi() {
+<span class="nc" id="L210">        List&lt;String&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L211">        list.add(&quot;Hello&quot;);</span>
+<span class="nc" id="L212">        list.add(&quot;World&quot;);</span>
+<span class="nc" id="L213">        list.add(&quot;Java&quot;);</span>
+
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        for (String item : list) {</span>
+<span class="nc" id="L216">            System.out.println(item);</span>
+<span class="nc" id="L217">        }</span>
+<span class="nc" id="L218">    }</span>
+
+    // Method with empty catch block (Hides exceptions, making debugging difficult)
+    public void emptyCatchBlock() {
+        try {
+            // Some logic
+<span class="nc" id="L224">            int result = 10 / 0;  // This will throw an ArithmeticException</span>
+<span class="nc" id="L225">        } catch (ArithmeticException e) {</span>
+            // Catch block is empty, exception is silently ignored
+<span class="nc" id="L227">        }</span>
+<span class="nc" id="L228">    }</span>
+
+    // Method with hardcoded magic numbers (Code Smell)
+    public void magicNumber() {
+<span class="nc" id="L232">        int total = 0;</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        for (int i = 0; i &lt; 100; i++) {  // 100 is a magic number</span>
+<span class="nc" id="L234">            total += i;</span>
+        }
+<span class="nc" id="L236">        System.out.println(total);</span>
+<span class="nc" id="L237">    }</span>
+
+    // Method with unreachable code (Code Smell)
+    public void unreachableCode() {
+<span class="nc" id="L241">        System.out.println(&quot;This code will never be executed&quot;);  // Unreachable code</span>
+<span class="nc" id="L242">    }</span>
+
+    // Code Smell: Method with too many parameters
+    public void tooManyParameters(String name, int age, String address, String phone, String email, boolean isActive) {
+<span class="nc" id="L246">        System.out.println(name + &quot; &quot; + age + &quot; &quot; + address + &quot; &quot; + phone + &quot; &quot; + email + &quot; &quot; + isActive);</span>
+<span class="nc" id="L247">    }</span>
+
+    // Main method to run the class
+    public static void main(String[] args) {
+<span class="nc" id="L251">        SonarQubeTest example = new SonarQubeTest();</span>
+<span class="nc" id="L252">        example.complexMethod();</span>
+<span class="nc" id="L253">        example.nullPointerBug();</span>
+<span class="nc" id="L254">        example.insecureHashing();</span>
+<span class="nc" id="L255">        example.duplicatedCode();</span>
+<span class="nc" id="L256">        example.longClassMethod();</span>
+<span class="nc" id="L257">        example.arrayIndexOutOfBounds();</span>
+<span class="nc" id="L258">        example.unusedVariable();</span>
+<span class="nc" id="L259">        example.deprecatedApi();</span>
+<span class="nc" id="L260">        example.emptyCatchBlock();</span>
+<span class="nc" id="L261">        example.magicNumber();</span>
+<span class="nc" id="L262">        example.unreachableCode();</span>
+<span class="nc" id="L263">        example.tooManyParameters(&quot;John&quot;, 25, &quot;Some Address&quot;, &quot;123-456-7890&quot;, &quot;john@example.com&quot;, true);</span>
+<span class="nc" id="L264">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
