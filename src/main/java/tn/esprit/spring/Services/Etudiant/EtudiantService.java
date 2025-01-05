@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class EtudiantService implements IEtudiantService {
+    // COMMENT TO TRIGGER PR FOR SONAR
     EtudiantRepository repo;
 
     @Override
