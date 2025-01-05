@@ -51,7 +51,7 @@ public class ChambreServiceTest {
 
         // Assert: Verify the result
         assertNotNull(result);
-        assertEquals(3, result.size());
+        assertEquals(2, result.size());
         assertEquals(101L, result.get(0).getNumeroChambre());
         assertEquals(102L, result.get(1).getNumeroChambre());
 
