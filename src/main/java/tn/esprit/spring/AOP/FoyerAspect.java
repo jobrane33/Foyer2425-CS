@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
 //La classe : Aspect
+//add comment for sonar comment PR test
 @Component
 @Aspect
 @Slf4j
